@@ -40,6 +40,7 @@ Snackbar 0.1 Snackbar.qml
 Switch 0.1 Switch.qml
 Tab 0.1 Tab.qml
 TabBar 0.1 TabBar.qml
+TabBarVertical 0.1 TabBarVertical.qml
 TabbedPage 0.1 TabbedPage.qml
 TextField 0.1 TextField.qml
 ThinDivider 0.1 ThinDivider.qml

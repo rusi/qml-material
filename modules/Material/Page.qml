@@ -119,17 +119,42 @@ FocusScope {
      */
     property Item rightSidebar
 
+
+    /*!
+      \qmlproperty TabBar tabbarOrientation
+      Specify the orientation of the TabBar - default is Horizontal.
+      */
+    property int tabbarOrientation: Qt.Horizontal
     /*!
        The index of the selected tab. This will be an index from the \l tabs
        property.
      */
-    property alias selectedTab: __actionBar.selectedTab
+    property int selectedTab:{
+        if (tabbarOrientation == Qt.Horizontal)
+            return __actionBar.selectedTab
+        else
+            return __rightTabBar.selectedIndex
+    }
+    onSelectedTabChanged: {
+        if (tabbarOrientation == Qt.Horizontal)
+            __actionBar.selectedTab = selectedTab
+        else
+            __rightTabBar.selectedIndex = selectedTab
+    }
 
     /*!
        The tab bar displayed below the actions in the action bar. Exposed for
        additional customization.
      */
-    property alias tabBar: __actionBar.tabBar
+    property var tabBar: {
+        if (tabbarOrientation == Qt.Horizontal)
+            return __actionBar.tabBar
+        else
+            return __rightTabBar
+    }
+//    onTabBarChanged: {
+//        console.log("tabBarChanged")
+//    }
 
     /*!
        The model to use as the tab items in the action bar. This can either be a Javascript
@@ -142,7 +167,18 @@ FocusScope {
        If it is a TabView component, the title of each Tab object will be used, as well as
        iconName and iconSource properties if present (as provided by the Material subclass of Tab).
      */
-    property alias tabs: __actionBar.tabs
+    property var tabs: {
+        if (tabbarOrientation == Qt.Horizontal)
+            return __actionBar.tabs
+        else
+            return __rightTabBar.tabs
+    }
+    onTabsChanged: {
+        if (tabbarOrientation == Qt.Horizontal)
+            __actionBar.tabs = tabs
+        else
+            __rightTabBar.tabs = tabs
+    }
 
     /*!
        The title of the page shown in the action bar.
@@ -215,8 +251,29 @@ FocusScope {
         anchors {
             top: parent.top
             bottom: parent.bottom
-            left: parent.left
+            left: __rightToolbar.right
             right: rightSidebarContent.left
+        }
+    }
+
+    View {
+        id: __rightToolbar
+        visible: tabbarOrientation == Qt.Vertical
+        width: visible ? Units.dp(80) : 0
+        elevation: 7
+        backgroundColor: Theme.primaryColor
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+        }
+
+        property alias selectedTab: __rightTabBar.selectedIndex
+
+        TabBarVertical {
+            id: __rightTabBar
+            anchors.fill: parent
+            darkBackground: Theme.isDarkColor(__rightToolbar.backgroundColor)
         }
     }
 
