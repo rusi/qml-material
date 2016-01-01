@@ -259,7 +259,7 @@ FocusScope {
     View {
         id: __rightToolbar
         visible: tabbarOrientation == Qt.Vertical
-        width: visible ? Units.dp(80) : 0
+        width: visible && __rightTabBar.visible ? Units.dp(80) : 0
         elevation: 7
         backgroundColor: Theme.primaryColor
         anchors {
@@ -274,6 +274,10 @@ FocusScope {
             id: __rightTabBar
             anchors.fill: parent
             darkBackground: Theme.isDarkColor(__rightToolbar.backgroundColor)
+        }
+
+        Behavior on width {
+            NumberAnimation { duration: 200 }
         }
     }
 
